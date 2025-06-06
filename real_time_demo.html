@@ -359,7 +359,11 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:12000/api/v1';
+        // Detect if we're running in the external environment
+        const isExternal = window.location.hostname.includes('prod-runtime.all-hands.dev');
+        const API_BASE = isExternal ? 
+            'https://work-1-nrbspfazbqxywbea.prod-runtime.all-hands.dev/api/v1' : 
+            'http://localhost:12000/api/v1';
         let websocket = null;
         let metrics = {
             totalRequests: 0,
@@ -601,7 +605,12 @@
             btn.textContent = 'Connecting...';
             btn.disabled = true;
             
-            websocket = new WebSocket('ws://localhost:12000/ws/real-time');
+            // Use appropriate WebSocket URL based on environment
+            const wsUrl = isExternal ? 
+                'wss://work-1-nrbspfazbqxywbea.prod-runtime.all-hands.dev/ws/real-time' : 
+                'ws://localhost:12000/ws/real-time';
+            
+            websocket = new WebSocket(wsUrl);
             
             websocket.onopen = function() {
                 output.innerHTML += '<span style="color: #00ff00;">✅ WebSocket connected!</span>\n';
