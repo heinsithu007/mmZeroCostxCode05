@@ -512,21 +512,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve static files - try v3 first, fallback to v2
-frontend_path = "/app/frontend-v3"
+# Serve static files - try professional first, then v3, fallback to v2
+frontend_path = "/app/frontend-professional"
 if not os.path.exists(frontend_path):
-    frontend_path = "/app/frontend-v2"
+    frontend_path = "/app/frontend-v3"
+    if not os.path.exists(frontend_path):
+        frontend_path = "/app/frontend-v2"
 
 app.mount("/static", StaticFiles(directory=frontend_path), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_frontend():
-    """Serve the enhanced frontend"""
+    """Serve the professional frontend"""
     try:
-        # Try v3 frontend first
-        frontend_file = "/app/frontend-v3/index.html"
+        # Try professional frontend first
+        frontend_file = "/app/frontend-professional/index.html"
         if not os.path.exists(frontend_file):
-            frontend_file = "/app/frontend-v2/index.html"
+            frontend_file = "/app/frontend-v3/index.html"
+            if not os.path.exists(frontend_file):
+                frontend_file = "/app/frontend-v2/index.html"
             
         with open(frontend_file, "r") as f:
             content = f.read()

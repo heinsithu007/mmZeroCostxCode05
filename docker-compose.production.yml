@@ -1,8 +1,6 @@
 # Enhanced CodeAgent03 + DeepSeek R1 Production Docker Compose
 # Phase 2: Complete production deployment with auto-scaling and monitoring
 
-version: '3.8'
-
 services:
   # Load Balancer & Reverse Proxy
   nginx:
@@ -85,7 +83,6 @@ services:
     depends_on:
       - redis
       - postgres
-      - vllm-server
     networks:
       - codeagent-network
     volumes:
@@ -125,7 +122,9 @@ services:
       - model_cache:/root/.cache
       - ./vllm_logs:/app/logs
     networks:
-      - codeagent-network
+      codeagent-network:
+        aliases:
+          - vllm-server
     profiles: ["gpu"]
     restart: unless-stopped
     healthcheck:
@@ -161,7 +160,9 @@ services:
       - model_cache:/root/.cache
       - ./vllm_logs:/app/logs
     networks:
-      - codeagent-network
+      codeagent-network:
+        aliases:
+          - vllm-server
     profiles: ["cpu"]
     restart: unless-stopped
     healthcheck:
