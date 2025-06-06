@@ -662,6 +662,8 @@
         }
         
         // API functions
+        const API_BASE_URL = 'http://localhost:12001';
+        
         async function makeAPICall(endpoint, data = null) {
             const options = {
                 method: data ? 'POST' : 'GET',
@@ -674,7 +676,7 @@
                 options.body = JSON.stringify(data);
             }
             
-            const response = await fetch(endpoint, options);
+            const response = await fetch(API_BASE_URL + endpoint, options);
             return await response.json();
         }
         
@@ -748,7 +750,7 @@
                 });
                 
                 if (result.success) {
-                    updateOutput('codeOutput', result.data.code);
+                    updateOutput('codeOutput', result.code);
                 } else {
                     updateOutput('codeOutput', `Error: ${result.message}`);
                 }
@@ -778,7 +780,7 @@
                 });
                 
                 if (result.success) {
-                    updateOutput('analysisOutput', result.data.analysis);
+                    updateOutput('analysisOutput', result.analysis);
                 } else {
                     updateOutput('analysisOutput', `Error: ${result.message}`);
                 }
@@ -806,7 +808,7 @@
                 });
                 
                 if (result.success) {
-                    updateOutput('chatOutput', result.data.response);
+                    updateOutput('chatOutput', result.response);
                 } else {
                     updateOutput('chatOutput', `Error: ${result.message}`);
                 }
@@ -836,7 +838,7 @@
                 }
                 formData.append('description', description);
                 
-                const response = await fetch('/api/v2/upload-project', {
+                const response = await fetch(API_BASE_URL + '/api/v2/upload-project', {
                     method: 'POST',
                     body: formData
                 });
